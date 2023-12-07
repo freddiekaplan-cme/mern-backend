@@ -24,4 +24,5 @@ dist-ssr
 *.sw?
 
 # My files
-.notes.md
+notes.md
+.env
