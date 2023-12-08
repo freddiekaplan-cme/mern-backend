@@ -1,4 +1,5 @@
 import { Document, Schema, model } from "mongoose"
+import bcrypt from "bcrypt"
 
 //interface user
 interface IUser extends Document {
@@ -18,7 +19,7 @@ const UserSchema = new Schema<IUser>(
 			//ta bort extra mellanslag osv
 		},
 		password: {
-			password: String,
+			type: String,
 			required: true,
 		},
 	},
@@ -27,6 +28,14 @@ const UserSchema = new Schema<IUser>(
 		timestamps: true,
 	},
 )
+
+//OBS använd function och inte arrow function
+UserSchema.pre("save", async function (next) {
+	if (!this.isModified("password")) next()
+
+	const passwordHash = await bcrypt.hash(this.password, 10)
+	this.password = passwordHash
+})
 
 const User = model<IUser>("User", UserSchema)
 
