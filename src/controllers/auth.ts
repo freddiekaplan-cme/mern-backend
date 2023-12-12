@@ -19,7 +19,7 @@ export const register = async (req: Request, res: Response) => {
 
 		res.status(201).json({ username, id: user._id })
 	} catch (error) {
-		res.status(500).send("Internal Server Error")
+		res.status(500).json({ message: "Internal Server Error" })
 	}
 }
 
