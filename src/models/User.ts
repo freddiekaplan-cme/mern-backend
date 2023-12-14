@@ -15,11 +15,11 @@ const UserSchema = new Schema<IUser>(
 			type: String,
 			required: true,
 			unique: true,
-			trim: true,
-			//ta bort extra mellanslag osv
+			trim: true, //ta bort extra mellanslag osv
 		},
 		password: {
 			type: String,
+			select: false, // standardbeteende blir att inte plocka ut lösen
 			required: true,
 		},
 	},

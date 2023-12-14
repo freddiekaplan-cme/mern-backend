@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express"
 import jwt from "jsonwebtoken"
+import User from "../models/User"
 
 const validateToken = (req: Request, res: Response, next: NextFunction) => {
 	// Söker efter en Authorization header
@@ -21,12 +22,16 @@ const validateToken = (req: Request, res: Response, next: NextFunction) => {
 	}
 	// Kolla att JWTn är giltig
 
-	jwt.verify(token, secret, (error, decodedToken: any) => {
-		if (error) {
+	jwt.verify(token, secret, (error, decodedPayload) => {
+		if (error || !decodedPayload || typeof decodedPayload === "string") {
 			return res.status(403).json({ message: "Not Authorized" })
 		}
 
-		req.userId = decodedToken.userId
+		if (!User.exists({ _id: decodedPayload.userId })) {
+			return res.status(403).json({ message: "Not Authorized" })
+		}
+
+		req.userId = decodedPayload.userId
 		next()
 	})
 	// Läsa ut användar-id från token
