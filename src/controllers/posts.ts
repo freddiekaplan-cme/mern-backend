@@ -23,8 +23,14 @@ export const create = async (req: Request, res: Response) => {
 }
 
 export const getAllPosts = async (req: Request, res: Response) => {
-	const limit = 5
-	const page = 1
+	const limit = parseInt(req.query.limit?.toString() || "5")
+	const page = parseInt(req.query.page?.toString() || "1")
+
+	if (isNaN(page)) {
+		res.status(400).json({
+			message: "Malformed query object number: " + req.query.toString(),
+		})
+	}
 
 	const posts = await Post.find()
 		.limit(limit)
