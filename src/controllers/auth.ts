@@ -2,7 +2,7 @@ import { Request, Response } from "express"
 import User from "../models/User"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
-import { assertDefined } from "../utils/assertDefine"
+import { assertDefined } from "../utils/assertDefined"
 
 export const register = async (req: Request, res: Response) => {
 	const { username, password } = req.body
@@ -72,7 +72,7 @@ export const refreshJWT = async (req: Request, res: Response) => {
 	}
 
 	try {
-		// Returnera refreshtoekn
+		// Returnera refreshtoken
 		const decodedPayload = (await jwt.verify(
 			refreshToken,
 			refreshTokenSecret,
@@ -84,7 +84,7 @@ export const refreshJWT = async (req: Request, res: Response) => {
 		const token = jwt.sign(
 			{ userId: decodedPayload.userId },
 			process.env.JWT_SECRET,
-			{ expiresIn: "1h" },
+			{ expiresIn: "24h" },
 		)
 
 		return res.status(200).json({

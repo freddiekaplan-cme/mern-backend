@@ -4,6 +4,7 @@ import mongoose from "mongoose"
 import cors from "cors"
 import * as authController from "./controllers/auth"
 import * as postsController from "./controllers/posts"
+import * as commentsController from "./controllers/comments"
 import validateToken from "./middleware/validateToken"
 
 const app = express()
@@ -18,6 +19,18 @@ app.get("/profile", validateToken, authController.profile)
 app.post("/posts", validateToken, postsController.create)
 app.get("/posts", postsController.getAllPosts)
 app.get("/posts:id", postsController.getPost)
+
+app.post(
+	"/posts/:postId/comments",
+	validateToken,
+	commentsController.createComment,
+)
+
+app.delete(
+	"/posts/:postId/comments/:commentId",
+	validateToken,
+	commentsController.deleteComment,
+)
 
 const mongoURL = process.env.DB_URL
 

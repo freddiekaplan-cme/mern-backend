@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import Post from "../models/Post"
-import { assertDefined } from "../utils/assertDefine"
+import { assertDefined } from "../utils/assertDefined"
 
 export const create = async (req: Request, res: Response) => {
 	assertDefined(req.userId)
@@ -32,10 +32,11 @@ export const getAllPosts = async (req: Request, res: Response) => {
 		})
 	}
 
-	const posts = await Post.find()
+	const posts = await Post.find({}, "-comments")
+		.sort({ createdAt: "descending" })
 		.limit(limit)
 		.skip(limit * (page - 1))
-		.populate("author")
+		.populate("author", "userName")
 
 	const totalCount = await Post.countDocuments()
 
@@ -48,7 +49,9 @@ export const getAllPosts = async (req: Request, res: Response) => {
 export const getPost = async (req: Request, res: Response) => {
 	const { id } = req.params
 
-	const post = await Post.findById(id).populate("author")
+	const post = await Post.findById(id)
+		.populate("author")
+		.populate("comments.author")
 
 	if (!post) {
 		return res.status(404).json({ message: "No post found for id: " + id })
