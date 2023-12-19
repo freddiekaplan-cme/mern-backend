@@ -5,6 +5,7 @@ import cors from "cors"
 import * as authController from "./controllers/auth"
 import * as postsController from "./controllers/posts"
 import * as commentsController from "./controllers/comments"
+import * as votesController from "./controllers/votes"
 import validateToken from "./middleware/validateToken"
 
 const app = express()
@@ -14,11 +15,15 @@ app.use(express.json())
 
 app.post("/register", authController.register)
 app.post("/login", authController.logIn)
+app.post("/token/refresh", authController.refreshJWT)
 app.get("/profile", validateToken, authController.profile)
 
 app.post("/posts", validateToken, postsController.create)
 app.get("/posts", postsController.getAllPosts)
-app.get("/posts:id", postsController.getPost)
+app.get("/posts/:id", postsController.getPost)
+
+app.post("/posts/:postId/upvote", validateToken, votesController.upvote)
+app.post("/posts/:postId/downvote", validateToken, votesController.downvote)
 
 app.post(
 	"/posts/:postId/comments",

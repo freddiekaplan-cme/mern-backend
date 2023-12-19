@@ -59,3 +59,20 @@ export const getPost = async (req: Request, res: Response) => {
 
 	res.status(200).json(post)
 }
+export function upvote(
+	arg0: string,
+	validateToken: (
+		req: Request<
+			import("express-serve-static-core").ParamsDictionary,
+			any,
+			any,
+			import("qs").ParsedQs,
+			Record<string, any>
+		>,
+		res: Response<any, Record<string, any>>,
+		next: import("express").NextFunction,
+	) => Response<any, Record<string, any>> | undefined,
+	upvote: any,
+) {
+	throw new Error("Function not implemented.")
+}
