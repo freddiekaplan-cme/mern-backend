@@ -54,7 +54,12 @@ export const logIn = async (req: Request, res: Response) => {
 			{ expiresIn: "1d" },
 		)
 
-		res.status(200).json({ token, refreshToken, username: user.userName })
+		res.status(200).json({
+			token,
+			refreshToken,
+			username: user.userName,
+			userId: user._id,
+		})
 	} catch (error) {
 		console.log("Error in login", error)
 		res.status(500).json({

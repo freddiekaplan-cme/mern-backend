@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import Post from "../models/Post"
 import { assertDefined } from "../utils/assertDefined"
+import mongoose, { mongo } from "mongoose"
 
 export const create = async (req: Request, res: Response) => {
 	assertDefined(req.userId)
@@ -14,6 +15,30 @@ export const create = async (req: Request, res: Response) => {
 	})
 
 	try {
+		if (req.file) {
+			const dbConnection = mongoose.connection
+
+			const bucket = new mongoose.mongo.GridFSBucket(dbConnection.db, {
+				bucketName: "images",
+			})
+
+			const uploadStream = bucket.openUploadStream(req.file.originalname)
+			const fileId = uploadStream.id
+
+			await new Promise((resolve, reject) => {
+				uploadStream.once("finish", resolve)
+				uploadStream.once("error", reject)
+
+				uploadStream.end(req.file?.buffer)
+			})
+
+			post.image = {
+				mimeType: req.file.mimetype,
+				size: req.file.size,
+				id: fileId,
+			}
+		}
+
 		const savedPost = await post.save()
 		res.status(201).json(savedPost)
 	} catch (error) {
