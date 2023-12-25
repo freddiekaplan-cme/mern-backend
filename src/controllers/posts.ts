@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import Post from "../models/Post"
 import { assertDefined } from "../utils/assertDefined"
-import mongoose, { mongo } from "mongoose"
+import mongoose from "mongoose"
 
 export const create = async (req: Request, res: Response) => {
 	assertDefined(req.userId)

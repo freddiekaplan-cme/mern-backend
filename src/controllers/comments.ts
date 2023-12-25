@@ -20,6 +20,7 @@ export const createComment = async (req: Request, res: Response) => {
 	post.comments.push({
 		body: commentBody,
 		author: userId,
+		post_id: postId,
 	})
 
 	const savedPost = await post.save()

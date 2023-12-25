@@ -5,6 +5,7 @@ interface IComment extends Document {
 	author: Types.ObjectId
 	createdAt: Date
 	updatedAt: Date
+	post_id: string
 }
 
 const CommentSchema = new Schema<IComment>(
@@ -17,6 +18,9 @@ const CommentSchema = new Schema<IComment>(
 			type: Schema.Types.ObjectId,
 			ref: "User",
 			required: true,
+		},
+		post_id: {
+			type: String,
 		},
 	},
 	{
