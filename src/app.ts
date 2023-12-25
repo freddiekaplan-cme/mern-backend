@@ -6,6 +6,7 @@ import * as postsController from "./controllers/posts"
 import * as commentsController from "./controllers/comments"
 import * as votesController from "./controllers/votes"
 import * as imageController from "./controllers/images"
+import * as filesController from "./controllers/files"
 import validateToken from "./middleware/validateToken"
 
 const app = express()
@@ -46,6 +47,6 @@ app.delete(
 	commentsController.deleteComment,
 )
 
-app.get("/images/:fileName", imageController.getImage)
+app.get("/files/:id", filesController.getFileById)
 
 export default app
