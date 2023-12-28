@@ -42,16 +42,16 @@ export const logIn = async (req: Request, res: Response) => {
 
 		// Returnera JWT
 		const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-			expiresIn: "1h",
+			expiresIn: "1d",
 		})
 
 		assertDefined(process.env.REFRESH_TOKEN_SECRET)
 
-		// Returnera refreshtoekn
+		// Returnera refreshtoken
 		const refreshToken = jwt.sign(
 			{ userId: user._id },
 			process.env.REFRESH_TOKEN_SECRET,
-			{ expiresIn: "1d" },
+			{ expiresIn: "2d" },
 		)
 
 		res.status(200).json({

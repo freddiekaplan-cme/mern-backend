@@ -22,21 +22,20 @@ const validateToken = (req: Request, res: Response, next: NextFunction) => {
 	}
 	// Kolla att JWTn är giltig
 
-	jwt.verify(token, secret, (error, decodedPayload) => {
+	// Läsa ut användar-id från token
+	jwt.verify(token, secret, async (error, decodedPayload) => {
 		if (error || !decodedPayload || typeof decodedPayload === "string") {
 			return res.status(403).json({ message: "Not Authorized" })
 		}
 
-		if (!User.exists({ _id: decodedPayload.userId })) {
-			return res.status(403).json({ message: "Not Authorized" })
+		if (!(await User.exists({ _id: decodedPayload.userId }))) {
+			return res.status(403).json({ message: "Not authorized" })
 		}
 
+		// Lägga till userId på req
 		req.userId = decodedPayload.userId
 		next()
 	})
-	// Läsa ut användar-id från token
-	// Lägga till userId på req
-	//
 }
 
 export default validateToken
