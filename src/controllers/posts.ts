@@ -64,12 +64,6 @@ export const deletePost = async (req: Request, res: Response) => {
 		return res.status(403).json({ message: "Not authorized" })
 	}
 
-	// post.deleteOne()
-
-	// const updatedPost = await post.save()
-
-	// return res.status(200).json(updatedPost)
-
 	try {
 		await post.deleteOne() // This will delete the post from the database
 		return res.status(200).json({ message: "Post successfully deleted" })
