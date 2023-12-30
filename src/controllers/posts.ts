@@ -47,6 +47,38 @@ export const create = async (req: Request, res: Response) => {
 	}
 }
 
+export const deletePost = async (req: Request, res: Response) => {
+	const { userId } = req
+	assertDefined(userId)
+
+	const post = await Post.findById(req.params.id)
+
+	if (!post) {
+		return res.status(404).json({
+			message:
+				"No post found for id: " + req.params.id + " user " + userId,
+		})
+	}
+
+	if (post.author.toString() !== userId) {
+		return res.status(403).json({ message: "Not authorized" })
+	}
+
+	// post.deleteOne()
+
+	// const updatedPost = await post.save()
+
+	// return res.status(200).json(updatedPost)
+
+	try {
+		await post.deleteOne() // This will delete the post from the database
+		return res.status(200).json({ message: "Post successfully deleted" })
+	} catch (error) {
+		console.error("Error deleting post:", error)
+		return res.status(500).json({ message: "Failed to delete the post" })
+	}
+}
+
 export const getAllPosts = async (req: Request, res: Response) => {
 	const limit = parseInt(req.query.limit?.toString() || "5")
 	const page = parseInt(req.query.page?.toString() || "1")

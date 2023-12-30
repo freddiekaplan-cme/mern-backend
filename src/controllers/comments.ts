@@ -46,7 +46,7 @@ export const deleteComment = async (req: Request, res: Response) => {
 	if (!comment) {
 		return res
 			.status(404)
-			.json({ message: "Not comment found for id: " + commentId })
+			.json({ message: "No comment found for id: " + commentId })
 	}
 
 	if (comment.author.toString() !== userId) {

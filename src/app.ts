@@ -30,7 +30,7 @@ app.post(
 app.get("/posts", postsController.getAllPosts)
 app.get("/posts/:id", postsController.getPost)
 // app.put('/posts/:id', validateToken, postsController.updatePost);
-// app.delete('/posts/:id', validateToken, postsController.deletePost);
+app.delete("/posts/:id", validateToken, postsController.deletePost)
 
 app.post("/posts/:postId/upvote", validateToken, votesController.upvote)
 app.post("/posts/:postId/downvote", validateToken, votesController.downvote)
