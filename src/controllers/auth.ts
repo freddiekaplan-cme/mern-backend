@@ -40,14 +40,12 @@ export const logIn = async (req: Request, res: Response) => {
 
 		assertDefined(process.env.JWT_SECRET)
 
-		// Returnera JWT
 		const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
 			expiresIn: "1d",
 		})
 
 		assertDefined(process.env.REFRESH_TOKEN_SECRET)
 
-		// Returnera refreshtoken
 		const refreshToken = jwt.sign(
 			{ userId: user._id },
 			process.env.REFRESH_TOKEN_SECRET,
@@ -77,7 +75,6 @@ export const refreshJWT = async (req: Request, res: Response) => {
 	}
 
 	try {
-		// Returnera refreshtoken
 		const decodedPayload = (await jwt.verify(
 			refreshToken,
 			refreshTokenSecret,
@@ -85,7 +82,6 @@ export const refreshJWT = async (req: Request, res: Response) => {
 
 		assertDefined(process.env.JWT_SECRET)
 
-		// Returnera JWT
 		const token = jwt.sign(
 			{ userId: decodedPayload.userId },
 			process.env.JWT_SECRET,

@@ -20,9 +20,7 @@ const validateToken = (req: Request, res: Response, next: NextFunction) => {
 	if (!secret) {
 		throw Error("Missing JWT_SECRET")
 	}
-	// Kolla att JWTn är giltig
 
-	// Läsa ut användar-id från token
 	jwt.verify(token, secret, async (error, decodedPayload) => {
 		if (error || !decodedPayload || typeof decodedPayload === "string") {
 			return res.status(403).json({ message: "Not Authorized" })
@@ -32,7 +30,6 @@ const validateToken = (req: Request, res: Response, next: NextFunction) => {
 			return res.status(403).json({ message: "Not authorized" })
 		}
 
-		// Lägga till userId på req
 		req.userId = decodedPayload.userId
 		next()
 	})

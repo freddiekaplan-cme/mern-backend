@@ -25,11 +25,11 @@ app.post(
 	"/posts",
 	validateToken,
 	upload.single("image"),
-	postsController.create,
+	postsController.createPost,
 )
 app.get("/posts", postsController.getAllPosts)
 app.get("/posts/:id", postsController.getPost)
-// app.put('/posts/:id', validateToken, postsController.updatePost);
+app.put("/posts/:id", validateToken, postsController.updatePost)
 app.delete("/posts/:id", validateToken, postsController.deletePost)
 
 app.post("/posts/:postId/upvote", validateToken, votesController.upvote)

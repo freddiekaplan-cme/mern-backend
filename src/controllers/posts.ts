@@ -3,7 +3,7 @@ import Post from "../models/Post"
 import { assertDefined } from "../utils/assertDefined"
 import mongoose from "mongoose"
 
-export const create = async (req: Request, res: Response) => {
+export const createPost = async (req: Request, res: Response) => {
 	assertDefined(req.userId)
 	const { title, link, body } = req.body
 
@@ -47,6 +47,34 @@ export const create = async (req: Request, res: Response) => {
 	}
 }
 
+export const updatePost = async (req: Request, res: Response) => {
+	assertDefined(req.userId)
+	const { title, link, body } = req.body
+
+	try {
+		const post = await Post.findById(req.params.id)
+
+		if (!post) {
+			return res.status(404).json({ message: "Post not found" })
+		}
+
+		if (post.author.toString() !== req.userId) {
+			return res.status(403).json({ message: "Not authorized" })
+		}
+
+		post.title = title
+		post.link = link
+		post.body = body
+
+		const updatedPost = await post.save()
+
+		res.status(200).json(updatedPost)
+	} catch (error) {
+		console.error(error)
+		res.status(500).json({ message: "Failed to update post" })
+	}
+}
+
 export const deletePost = async (req: Request, res: Response) => {
 	const { userId } = req
 	assertDefined(userId)
@@ -65,7 +93,7 @@ export const deletePost = async (req: Request, res: Response) => {
 	}
 
 	try {
-		await post.deleteOne() // This will delete the post from the database
+		await post.deleteOne()
 		return res.status(200).json({ message: "Post successfully deleted" })
 	} catch (error) {
 		console.error("Error deleting post:", error)
@@ -175,12 +203,6 @@ export const getAllPosts = async (req: Request, res: Response) => {
 			},
 		},
 	])
-
-	// const posts = await Post.find({}, "-comments")
-	// 	.sort({ createdAt: "descending" })
-	// 	.limit(limit)
-	// 	.skip(limit * (page - 1))
-	// 	.populate("author", "userName")
 
 	const totalCount = await Post.countDocuments()
 
